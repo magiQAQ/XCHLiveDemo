@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
 import me.lake.librestreaming.core.listener.RESScreenShotListener;
 import me.lake.librestreaming.filter.hardvideofilter.BaseHardVideoFilter;
 import me.lake.librestreaming.ws.StreamLiveCameraView;
@@ -21,7 +22,6 @@ public class LiveUI implements View.OnClickListener {
 
     private LiveActivity activity;
     private StreamLiveCameraView liveCameraView;
-    private String rtmpUrl = "";
     boolean isFilter = false;
     boolean isMirror = false;
 
@@ -36,10 +36,9 @@ public class LiveUI implements View.OnClickListener {
 
     private ImageView imageView;
 
-    public LiveUI(LiveActivity liveActivity , StreamLiveCameraView liveCameraView , String rtmpUrl) {
+    public LiveUI(LiveActivity liveActivity , StreamLiveCameraView liveCameraView) {
         this.activity = liveActivity;
         this.liveCameraView = liveCameraView;
-        this.rtmpUrl = rtmpUrl;
 
         init();
     }
@@ -83,7 +82,7 @@ public class LiveUI implements View.OnClickListener {
        switch (view.getId()){
            case R.id.btn_startStreaming://开始推流
                if(!liveCameraView.isStreaming()){
-                   liveCameraView.startStreaming(rtmpUrl);
+                   liveCameraView.startStreaming();
                }
                break;
            case R.id.btn_stopStreaming://停止推流
@@ -106,7 +105,7 @@ public class LiveUI implements View.OnClickListener {
            case R.id.btn_filter://切换滤镜
                BaseHardVideoFilter baseHardVideoFilter = null;
                if(isFilter){
-                   baseHardVideoFilter = new GPUImageCompatibleFilter(new GPUImageBeautyFilter());
+                   baseHardVideoFilter = new GPUImageCompatibleFilter(new GPUImageFilter());
                }else {
                    baseHardVideoFilter = new FishEyeFilterHard();
                }

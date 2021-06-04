@@ -8,9 +8,11 @@ import android.widget.Toast;
 
 import java.util.LinkedList;
 
+import jp.co.cyberagent.android.gpuimage.GPUImageFilter;
 import me.lake.librestreaming.core.listener.RESConnectionListener;
 import me.lake.librestreaming.filter.hardvideofilter.BaseHardVideoFilter;
 import me.lake.librestreaming.filter.hardvideofilter.HardVideoGroupFilter;
+import me.lake.librestreaming.filter.hardvideofilter.OriginalHardVideoFilter;
 import me.lake.librestreaming.ws.StreamAVOption;
 import me.lake.librestreaming.ws.StreamLiveCameraView;
 import me.lake.librestreaming.ws.filter.hardfilter.GPUImageBeautyFilter;
@@ -21,8 +23,8 @@ public class LiveActivity extends AppCompatActivity {
     private static final String TAG = LiveActivity.class.getSimpleName();
     private StreamLiveCameraView mLiveCameraView;
     private StreamAVOption streamAVOption;
-    private String rtmpUrl = "rtmp://ossrs.net/" + StatusBarUtils.getRandomAlphaString(3) + '/' + StatusBarUtils.getRandomAlphaDigitString(5);
-
+//    private String rtmpUrl = "rtmp://ossrs.net/" + StatusBarUtils.getRandomAlphaString(3) + '/' + StatusBarUtils.getRandomAlphaDigitString(5);
+    private String rtmpUrl = "rtmp://1011.lsspublish.aodianyun.com/demo/test8";
     private LiveUI mLiveUI;
 
     @Override
@@ -32,7 +34,7 @@ public class LiveActivity extends AppCompatActivity {
         StatusBarUtils.setTranslucentStatus(this);
 
         initLiveConfig();
-        mLiveUI = new LiveUI(this,mLiveCameraView,rtmpUrl);
+        mLiveUI = new LiveUI(this,mLiveCameraView);
     }
 
     /**
@@ -44,14 +46,21 @@ public class LiveActivity extends AppCompatActivity {
         //参数配置 start
         streamAVOption = new StreamAVOption();
         streamAVOption.streamUrl = rtmpUrl;
+        streamAVOption.videoFramerate = 60;
+        streamAVOption.videoWidth = 1920;
+        streamAVOption.videoHeight = 1080;
+        streamAVOption.previewHeight = 1920;
+        streamAVOption.previewWidth = 1080;
+        streamAVOption.videoBitrate = 6000 * 1024;
         //参数配置 end
 
         mLiveCameraView.init(this, streamAVOption);
         mLiveCameraView.addStreamStateListener(resConnectionListener);
-        LinkedList<BaseHardVideoFilter> files = new LinkedList<>();
-        files.add(new GPUImageCompatibleFilter(new GPUImageBeautyFilter()));
-        files.add(new WatermarkFilter(BitmapFactory.decodeResource(getResources(),R.mipmap.live),new Rect(100,100,200,200)));
-        mLiveCameraView.setHardVideoFilter(new HardVideoGroupFilter(files));
+//        LinkedList<BaseHardVideoFilter> files = new LinkedList<>();
+//        files.add(new GPUImageCompatibleFilter<>(new GPUImageBeautyFilter()));
+//        files.add(new WatermarkFilter(BitmapFactory.decodeResource(getResources(),R.mipmap.live),new Rect(100,100,200,200)));
+//        mLiveCameraView.setHardVideoFilter(new HardVideoGroupFilter(files));
+        mLiveCameraView.setHardVideoFilter(new OriginalHardVideoFilter(null, null));
     }
 
     RESConnectionListener resConnectionListener = new RESConnectionListener() {

@@ -1,6 +1,7 @@
 package me.lake.librestreaming.ws;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.AttributeSet;
@@ -41,8 +42,6 @@ public class StreamLiveCameraView extends FrameLayout {
 
     private static RESClient resClient;
     private static RESConfig resConfig;
-    private static int quality_value_min = 400 * 1024;
-    private static int quality_value_max = 700 * 1024;
 
     public StreamLiveCameraView(Context context) {
         super(context);
@@ -82,6 +81,7 @@ public class StreamLiveCameraView extends FrameLayout {
         addListenerAndFilter();
     }
 
+    // 没有前置摄像头的时候该方法才会生效
     private void compatibleSize(StreamAVOption avOptions) {
         Camera.Size cameraSize = CameraUtil.getInstance().getBestSize(CameraUtil.getFrontCameraSize(),Integer.parseInt("800"));
         if(!CameraUtil.hasSupportedFrontVideoSizes){
@@ -105,7 +105,7 @@ public class StreamLiveCameraView extends FrameLayout {
             textureView.setKeepScreenOn(true);
             textureView.setSurfaceTextureListener(surfaceTextureListenerImpl);
             Size s = resClient.getVideoSize();
-            textureView.setAspectRatio(AspectTextureView.MODE_OUTSIDE, ((double) s.getWidth() / s.getHeight()));
+            textureView.setAspectRatio(AspectTextureView.MODE_INSIDE, ((double) s.getWidth() / s.getHeight()));
         }
     }
 
@@ -130,9 +130,9 @@ public class StreamLiveCameraView extends FrameLayout {
     /**
      * 开始推流
      */
-    public void startStreaming(String rtmpUrl){
+    public void startStreaming(){
         if(resClient != null){
-            resClient.startStreaming(rtmpUrl);
+            resClient.startStreaming();
         }
     }
 
@@ -155,7 +155,12 @@ public class StreamLiveCameraView extends FrameLayout {
             resClient.setNeedResetEglContext(true);
             try {
                 mMuxer = new MediaMuxerWrapper(".mp4");    // if you record audio only, ".m4a" is also OK.
-                new MediaVideoEncoder(mMuxer, mMediaEncoderListener, StreamAVOption.recordVideoWidth, StreamAVOption.recordVideoHeight);
+                Size size = resConfig.getTargetVideoSize();
+                if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    new MediaVideoEncoder(mMuxer, mMediaEncoderListener, size.getHeight(), size.getWidth());
+                } else {
+                    new MediaVideoEncoder(mMuxer, mMediaEncoderListener, size.getWidth(), size.getHeight());
+                }
                 new MediaAudioEncoder(mMuxer, mMediaEncoderListener);
 
                 mMuxer.prepare();

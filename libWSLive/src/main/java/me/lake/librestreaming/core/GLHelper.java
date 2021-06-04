@@ -454,12 +454,9 @@ public class GLHelper {
 
     public static FloatBuffer adjustTextureFlip(boolean flipHorizontal) {
         float[] textureCords = getFlip(flipHorizontal, false);
-        FloatBuffer mTextureBuffer = null;
-        if (mTextureBuffer == null) {
-            mTextureBuffer = ByteBuffer.allocateDirect(textureCords.length * 4)
-                    .order(ByteOrder.nativeOrder())
-                    .asFloatBuffer();
-        }
+        FloatBuffer mTextureBuffer = ByteBuffer.allocateDirect(textureCords.length * 4)
+                .order(ByteOrder.nativeOrder())
+                .asFloatBuffer();
         mTextureBuffer.clear();
         mTextureBuffer.put(textureCords).position(0);
 

@@ -95,27 +95,6 @@ public class RESClient {
     /**
      * start streaming
      */
-    public void startStreaming(String rtmpAddr) {
-        isStreaming = true;
-        synchronized (SyncOp) {
-            try {
-                videoClient.startStreaming(dataCollecter);
-                rtmpSender.start(rtmpAddr == null ? coreParameters.rtmpAddr : rtmpAddr);
-                audioClient.start(dataCollecter);
-                LogTools.d("RESClient,startStreaming()");
-            }catch (Exception e){
-                if(mActivity.get() !=null){
-                    Toast.makeText(mActivity.get(),"可能没有权限",Toast.LENGTH_LONG).show();
-                    mActivity.get().finish();
-                }
-            }
-
-        }
-    }
-
-    /**
-     * start streaming
-     */
     public void startStreaming() {
         isStreaming = true;
         synchronized (SyncOp) {

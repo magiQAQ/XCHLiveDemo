@@ -15,7 +15,7 @@ public class StreamAVOption {
     public int videoFramerate = StreamConfig.AVOptionsHolder.DEFAULT_VIDEO_FPS;//帧率
     public int videoGOP = StreamConfig.AVOptionsHolder.DEFAULT_VIDEO_GOP;//gop 关键帧间隔
     public String streamUrl = "";
-
-    public static int recordVideoWidth = 544;//录制的视频宽
-    public static int recordVideoHeight = 960;//录制的视频高
+//
+//    public static int recordVideoWidth = 544;//录制的视频宽
+//    public static int recordVideoHeight = 960;//录制的视频高
 }

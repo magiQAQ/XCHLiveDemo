@@ -341,11 +341,11 @@ public class RESHardVideoCore implements RESVideoCore {
                                 while (frameNum != 0) {
                                     cameraTexture.updateTexImage();
                                     --frameNum;
-                                    if (!dropNextFrame) {
-                                        hasNewFrame = true;
-                                    } else {
+                                    if (dropNextFrame) {
                                         dropNextFrame = false;
-                                        hasNewFrame=false;
+                                        hasNewFrame = false;
+                                    } else {
+                                        hasNewFrame = true;
                                     }
                                 }
                             } else {
@@ -683,7 +683,7 @@ public class RESHardVideoCore implements RESVideoCore {
                 frameBuffer = fb[0];
                 frameBufferTexture = fbt[0];
             } else {
-                throw new IllegalStateException("initOffScreenGL without uninitOffScreenGL");
+                        throw new IllegalStateException("initOffScreenGL without uninitOffScreenGL");
             }
         }
 
@@ -793,7 +793,7 @@ public class RESHardVideoCore implements RESVideoCore {
             synchronized (syncCameraTextureVerticesBuffer) {
                 currCamera = cameraIndex;
                 if (currCamera == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    directionFlag = resCoreParameters.frontCameraDirectionMode ^ RESConfig.DirectionMode.FLAG_DIRECTION_FLIP_HORIZONTAL;
+                    directionFlag = resCoreParameters.frontCameraDirectionMode;
                 } else {
                     directionFlag = resCoreParameters.backCameraDirectionMode;
                 }
@@ -868,9 +868,9 @@ public class RESHardVideoCore implements RESVideoCore {
                 matrix[4 * i] = -matrix[4 * i];
             }
 
-            if (matrix[4 * 3] == 0) {
-                matrix[4 * 3] = 1.0f;
-            } else if (matrix[4 * 3] == 1.0f) {
+            if (matrix[4 * 3] == 0f) {
+                matrix[4 * 3] = 1f;
+            } else if (matrix[4 * 3] == 1f) {
                 matrix[4 * 3] = 0f;
             }
         }

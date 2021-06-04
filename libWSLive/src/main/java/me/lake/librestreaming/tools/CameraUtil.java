@@ -79,28 +79,13 @@ public class CameraUtil {
 
     public boolean equalRate(Size s, float rate){
         float r = (float)(s.width)/(float)(s.height);
-        if(Math.abs(r - rate) <= 0.2)
-        {
-            return true;
-        }
-        else{
-            return false;
-        }
+        return Math.abs(r - rate) <= 0.2;
     }
 
     public  class CameraSizeComparator implements Comparator<Size> {
         //按升序排列
         public int compare(Size lhs, Size rhs) {
-            // TODO Auto-generated method stub
-            if(lhs.width == rhs.width){
-                return 0;
-            }
-            else if(lhs.width > rhs.width){
-                return 1;
-            }
-            else{
-                return -1;
-            }
+            return Integer.compare(lhs.width, rhs.width);
         }
 
     }
@@ -108,16 +93,7 @@ public class CameraUtil {
     public  class CameraSizeComparator2 implements Comparator<Size> {
         //按降序排列
         public int compare(Size lhs, Size rhs) {
-            // TODO Auto-generated method stub
-            if(lhs.width == rhs.width){
-                return 0;
-            }
-            else if(lhs.width < rhs.width){
-                return 1;
-            }
-            else{
-                return -1;
-            }
+            return Integer.compare(rhs.width, lhs.width);
         }
 
     }

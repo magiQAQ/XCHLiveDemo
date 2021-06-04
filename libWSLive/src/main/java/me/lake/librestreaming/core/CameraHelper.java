@@ -2,6 +2,7 @@ package me.lake.librestreaming.core;
 
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.util.Log;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,15 +49,12 @@ public class CameraHelper {
             public int compare(int[] lhs, int[] rhs) {
                 int r = Math.abs(lhs[0] - targetFps) + Math.abs(lhs[1] - targetFps);
                 int l = Math.abs(rhs[0] - targetFps) + Math.abs(rhs[1] - targetFps);
-                if (r > l) {
-                    return 1;
-                } else if (r < l) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+                return Integer.compare(r, l);
             }
         });
+        for (int[] range : fpsRanges) {
+            Log.d("selectCameraFpsRange", range[0] + "~" + range[1]);
+        }
         coreParameters.previewMinFps = fpsRanges.get(0)[0];
         coreParameters.previewMaxFps = fpsRanges.get(0)[1];
     }
@@ -66,11 +64,8 @@ public class CameraHelper {
         Collections.sort(previewsSizes, new Comparator<Camera.Size>() {
             @Override
             public int compare(Camera.Size lhs, Camera.Size rhs) {
-                if ((lhs.width * lhs.height) > (rhs.width * rhs.height)) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+                // 升序排列
+                return Integer.compare(lhs.width * lhs.height, rhs.width * rhs.height);
             }
         });
         for (Camera.Size size : previewsSizes) {
